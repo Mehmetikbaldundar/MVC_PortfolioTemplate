@@ -11,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="AboutMeID" />
             <div class="form-group">
@@ -19,9 +19,16 @@
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/ckeditor/ckeditor.js"></script>
+            <script>
+                $(document).ready(function () {
+                    CKEDITOR.replace('test');
+                })
+            </script>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea name="Description" id="test"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -31,7 +38,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DescriptionPhoto" class="control-label"></label>
-                <input asp-for="DescriptionPhoto" class="form-control" />
+                <input asp-for="DescriptionPhoto" class="form-control" type="file" name="DescriptionPhoto" />
                 <span asp-validation-for="DescriptionPhoto" class="text-danger"></span>
             </div>
             <div class="form-group">

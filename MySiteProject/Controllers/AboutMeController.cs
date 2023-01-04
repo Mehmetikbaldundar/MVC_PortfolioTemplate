@@ -62,8 +62,8 @@ namespace MySiteProject.Controllers
                 if (DescriptionPhoto != null)
                 {
                     string imageName = DescriptionPhoto.FileName;
-                    string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{imageName}");
-                    var stream = new FileStream(path, FileMode.Create);
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/assets/img/aboutme/{imageName}");
+                    var stream = new FileStream(path, FileMode.OpenOrCreate);
                     aboutMe.DescriptionPhoto = imageName;
                     DescriptionPhoto.CopyTo(stream);
                 }
@@ -95,7 +95,7 @@ namespace MySiteProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AboutMeID,Title,Description,DescriptionDate,DescriptionPhoto")] AboutMe aboutMe)
+        public async Task<IActionResult> Edit(int id, [Bind("AboutMeID,Title,Description,DescriptionDate,DescriptionPhoto")] AboutMe aboutMe, IFormFile DescriptionPhoto)
         {
             if (id != aboutMe.AboutMeID)
             {
@@ -106,6 +106,14 @@ namespace MySiteProject.Controllers
             {
                 try
                 {
+                    if (DescriptionPhoto != null)
+                    {
+                        string imageName = DescriptionPhoto.FileName;
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/assets/img/aboutme/{imageName}");
+                        var stream = new FileStream(path, FileMode.OpenOrCreate);
+                        aboutMe.DescriptionPhoto = imageName;
+                        DescriptionPhoto.CopyTo(stream);
+                    }
                     _context.Update(aboutMe);
                     await _context.SaveChangesAsync();
                 }

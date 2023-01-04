@@ -54,10 +54,18 @@ namespace MySiteProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProjectID,ProjectName,ProjectDescription,ProjectDate,ProjectPhoto")] ProjectInfo projectInfo)
+        public async Task<IActionResult> Create(ProjectInfo projectInfo,IFormFile projectPhoto)
         {
             if (ModelState.IsValid)
             {
+                if (projectPhoto != null)
+                {
+                    string imageName = projectPhoto.FileName;
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/assets/img/project/{imageName}");
+                    var stream = new FileStream(path,FileMode.OpenOrCreate);
+                    projectInfo.ProjectPhoto = imageName;
+                    projectPhoto.CopyTo(stream);
+                }
                 _context.Add(projectInfo);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +94,7 @@ namespace MySiteProject.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectDescription,ProjectDate,ProjectPhoto")] ProjectInfo projectInfo)
+        public async Task<IActionResult> Edit(int id, [Bind("ProjectID,ProjectName,ProjectDescription,ProjectDate,ProjectPhoto")] ProjectInfo projectInfo, IFormFile projectPhoto)
         {
             if (id != projectInfo.ProjectID)
             {
@@ -97,6 +105,14 @@ namespace MySiteProject.Controllers
             {
                 try
                 {
+                    if (projectPhoto != null)
+                    {
+                        string imageName = projectPhoto.FileName;
+                        string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/assets/img/project/{imageName}");
+                        var stream = new FileStream(path, FileMode.OpenOrCreate);
+                        projectInfo.ProjectPhoto = imageName;
+                        projectPhoto.CopyTo(stream);
+                    }
                     _context.Update(projectInfo);
                     await _context.SaveChangesAsync();
                 }
